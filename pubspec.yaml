@@ -1,7 +1,7 @@
 name: feature_intro
 description: A simple library for creating feature introduction.
 version: 0.0.1
-homepage:
+homepage: https://github.com/exilus4/feature_intro
 
 environment:
   sdk: '>=3.0.5 <4.0.0'
