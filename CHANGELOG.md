@@ -9,3 +9,7 @@
 * Update README.md
 
 * Add function documentation
+
+## 0.0.3
+
+* Dart documentation format
