@@ -18,6 +18,19 @@ enum AppFeatureIntro {
 }
 ```
 
+Create a FeatureIntro widget
+
+```dart
+Widget build(BuildContext context) {
+    return MaterialApp.router(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+            useMaterial3: true,
+        ),
+        builder: (context, child) => FeatureIntro(controller: FeatureIntroController(), child: Container(child: child)));
+}
+```
+
 ## Usage
 
 For example to start using the intro:
