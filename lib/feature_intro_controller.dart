@@ -24,6 +24,9 @@ class FeatureIntroController {
     _isRender.value = true;
   }
 
+  /*
+    This function primary used as forward step key. 
+  */
   void next(
       {void Function()? beforeStepInExecute,
       void Function()? afterStepInExecute}) {
@@ -32,6 +35,9 @@ class FeatureIntroController {
     _isNext.value = !_isNext.value;
   }
 
+  /*
+    This function primary used as backward step key. 
+  */
   void previous(
       {void Function()? beforeStepInExecute,
       void Function()? afterStepInExecute}) {
@@ -40,6 +46,9 @@ class FeatureIntroController {
     _isPrevious.value = !_isPrevious.value;
   }
 
+  /*
+    This function primary used as reset rendering. 
+  */
   void close(
       {void Function()? beforeStepInExecute,
       void Function()? afterStepInExecute}) {

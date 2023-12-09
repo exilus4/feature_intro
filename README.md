@@ -1,6 +1,6 @@
 ## Features
 
-A simple library for creating feature introduction.
+A simple library for creating feature introduction to make dev life easier.
 
 ## Getting started
 

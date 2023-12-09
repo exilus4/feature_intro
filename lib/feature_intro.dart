@@ -32,6 +32,9 @@ class FeatureIntro extends InheritedWidget {
   bool updateShouldNotify(covariant InheritedWidget oldWidget) =>
       child != oldWidget.child;
 
+  /*
+    To start using feature intro, this function should called before next() / previous() 
+  */
   void start({required List<FeatureIntroStepKey> keys}) {
     if (keys.isEmpty) {
       throw ArgumentError("Can't get any IntroStepKey. "
@@ -41,6 +44,9 @@ class FeatureIntro extends InheritedWidget {
   }
 }
 
+/*
+  This enum used to be control content aligment
+*/
 enum FeatureIntroContentAligment {
   auto,
   left,

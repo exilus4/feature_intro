@@ -1,5 +1,8 @@
 part of 'feature_intro.dart';
 
+/*
+  FeatureIntroStepKey should declared as custom enums
+*/
 class FeatureIntroStepKey {
   final Key key;
   final bool initStepAfterStart;
@@ -8,6 +11,9 @@ class FeatureIntroStepKey {
       {required this.key, this.initStepAfterStart = false});
 }
 
+/*
+  FeatureIntroStep is a widget to bind related feature_intro object. For example: FeatureIntroStepKey, FeatureIntroController, FeatureIntro display content, etc.
+*/
 class FeatureIntroStep extends StatefulWidget {
   const FeatureIntroStep({
     super.key,
