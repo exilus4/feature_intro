@@ -64,7 +64,8 @@ class _FeatureIntroStepState extends State<FeatureIntroStep>
       _currentIntroStepOffset = renderBox.localToGlobal(Offset.zero);
       _currentIntroStepSize = context.size!;
       _finishInit = true;
-      if (widget.stepKey.initStepAfterStart && widget.controller._isRender.value) {
+      if (widget.stepKey.initStepAfterStart &&
+          widget.controller._isRender.value) {
         widget.controller._isOverlayRebuild.value =
             !widget.controller._isOverlayRebuild.value;
       }

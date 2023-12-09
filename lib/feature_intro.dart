@@ -10,6 +10,9 @@ part 'feature_intro_step.dart';
 part 'feature_intro_widget.dart';
 
 class FeatureIntro extends InheritedWidget {
+  ///
+  /// FeatureIntro.of(context)
+  ///
   static FeatureIntro of(BuildContext context) {
     final instance = context.dependOnInheritedWidgetOfExactType<FeatureIntro>();
     if (instance == null) {
@@ -33,7 +36,7 @@ class FeatureIntro extends InheritedWidget {
       child != oldWidget.child;
 
   ///
-  ///  To start using feature intro, this function should called before next() / previous() 
+  ///  To start using feature intro, this function should called before next() / previous()
   ///
   void start({required List<FeatureIntroStepKey> keys}) {
     if (keys.isEmpty) {

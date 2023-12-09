@@ -25,7 +25,7 @@ class FeatureIntroController {
   }
 
   ///
-  ///  This function primary used as forward step key. 
+  ///  This function primary used as forward step key.
   ///
   void next(
       {void Function()? beforeStepInExecute,
@@ -36,7 +36,7 @@ class FeatureIntroController {
   }
 
   ///
-  ///  This function primary used as backward step key. 
+  ///  This function primary used as backward step key.
   ///
   void previous(
       {void Function()? beforeStepInExecute,
@@ -47,7 +47,7 @@ class FeatureIntroController {
   }
 
   ///
-  ///  This function primary used as reset rendering. 
+  ///  This function primary used as reset rendering.
   ///
   void close(
       {void Function()? beforeStepInExecute,

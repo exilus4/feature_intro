@@ -12,7 +12,6 @@ class _FeatureIntroOverlayWidget extends StatefulWidget {
 
 class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
     with WidgetsBindingObserver, TickerProviderStateMixin {
-
   bool _isChangeMetrics = false;
 
   Timer? _rebuildTimer;
@@ -35,7 +34,8 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
       }
       _isChangeMetrics = true;
       _rebuildTimer = Timer(const Duration(milliseconds: 1), () {
-        widget.controller._isOverlayRebuild.value = !widget.controller._isOverlayRebuild.value;
+        widget.controller._isOverlayRebuild.value =
+            !widget.controller._isOverlayRebuild.value;
       });
     }
   }
@@ -87,12 +87,16 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
     );
   }
 
+  ///
+  /// This function is to render overlay background widget.
+  ///
   Widget _highlightWidget(bool refresh) {
     final _FeatureIntroStepState step = widget.controller._steps.singleWhere(
         (element) =>
             element.widget.stepKey ==
-            widget.controller
-                ._renderStepKeys[refresh ? widget.controller._currentStepIndex.value : widget.controller._currentStepIndex.value - 1]);
+            widget.controller._renderStepKeys[refresh
+                ? widget.controller._currentStepIndex.value
+                : widget.controller._currentStepIndex.value - 1]);
 
     return StatefulBuilder(builder: (context, setState) {
       return ColorFiltered(
@@ -130,6 +134,9 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
     });
   }
 
+  ///
+  /// This function is to render pre-defined content from FeatureIntroStep.
+  ///
   Widget _contentWidget(bool refresh) {
     final Size screenSize = MediaQuery.of(context).size;
 
@@ -138,8 +145,9 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
     final _FeatureIntroStepState step = widget.controller._steps.singleWhere(
         (element) =>
             element.widget.stepKey ==
-            widget.controller
-                ._renderStepKeys[refresh ? widget.controller._currentStepIndex.value : widget.controller._currentStepIndex.value - 1]);
+            widget.controller._renderStepKeys[refresh
+                ? widget.controller._currentStepIndex.value
+                : widget.controller._currentStepIndex.value - 1]);
 
     return StatefulBuilder(
       builder: (context, setState) {
@@ -166,8 +174,8 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
                           child: widget.controller._steps
                               .singleWhere((element) =>
                                   element.widget.stepKey ==
-                                  widget.controller._renderStepKeys[
-                                      widget.controller._currentStepIndex.value])
+                                  widget.controller._renderStepKeys[widget
+                                      .controller._currentStepIndex.value])
                               .widget
                               .content),
                     ],
@@ -177,6 +185,9 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
     );
   }
 
+  ///
+  /// This function is to detect click input in-order to perform next().
+  ///
   Widget _outBoundNextWidget() {
     return InkWell(
       onTap: () => widget.controller.next(),
@@ -190,6 +201,9 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
     );
   }
 
+  ///
+  /// This function is to perform next() logic after next() is called.
+  ///
   void _controllerNextStepIndexListener() {
     if (widget.controller._currentStepIndex.value !=
         widget.controller._renderStepKeys.length - 1) {
@@ -198,7 +212,8 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
       }
       widget.controller._currentStepIndex.value += 1;
       _isChangeMetrics = false;
-      widget.controller._isOverlayRebuild.value = !widget.controller._isOverlayRebuild.value;
+      widget.controller._isOverlayRebuild.value =
+          !widget.controller._isOverlayRebuild.value;
       if (widget.controller._afterStepInExecute != null) {
         widget.controller._afterStepInExecute!();
       }
@@ -207,6 +222,9 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
     }
   }
 
+  ///
+  /// This function is to perform previous() logic after next() is called.
+  ///
   void _controllerPreviousStepIndexListener() {
     if (widget.controller._currentStepIndex.value != 0) {
       if (widget.controller._beforeStepInExecute != null) {
@@ -214,7 +232,8 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
       }
       widget.controller._currentStepIndex.value -= 1;
       _isChangeMetrics = false;
-      widget.controller._isOverlayRebuild.value = !widget.controller._isOverlayRebuild.value;
+      widget.controller._isOverlayRebuild.value =
+          !widget.controller._isOverlayRebuild.value;
       if (widget.controller._afterStepInExecute != null) {
         widget.controller._afterStepInExecute!();
       }
@@ -223,6 +242,9 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
     }
   }
 
+  ///
+  /// This function is to perform render overlay widget logic.
+  ///
   void _controllerIsRenderListener() {
     if (!widget.controller._isRender.value) {
       if (widget.controller._beforeStepInExecute != null) {
@@ -236,6 +258,9 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
     }
   }
 
+  ///
+  /// This function is to calculate pre-defined context offset X
+  ///
   double _calculateContentDx(Size contentSize, Size screenSize) {
     double contentDx = 0;
 
@@ -292,6 +317,9 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
     return contentDx;
   }
 
+  ///
+  /// This function is to calculate pre-defined context offset Y
+  ///
   double _calculateContentDy(Size contentSize, Size screenSize) {
     double contentDy = 0;
 
