@@ -60,10 +60,10 @@ packages:
   feature_intro:
     dependency: "direct main"
     description:
-      path: "D:/Github/feature_intro"
-      relative: false
+      path: ".."
+      relative: true
     source: path
-    version: "0.0.3"
+    version: "0.0.4"
   flutter:
     dependency: "direct main"
     description: flutter

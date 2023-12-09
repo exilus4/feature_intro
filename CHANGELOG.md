@@ -13,3 +13,7 @@
 ## 0.0.3
 
 * Dart documentation format
+
+## 0.0.4
+
+* Add example project
