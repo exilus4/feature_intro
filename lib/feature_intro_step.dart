@@ -2,8 +2,10 @@ part of 'feature_intro.dart';
 
 class FeatureIntroStepKey {
   final Key key;
+  final bool initStepAfterStart;
 
-  const FeatureIntroStepKey({required this.key});
+  const FeatureIntroStepKey(
+      {required this.key, this.initStepAfterStart = false});
 }
 
 class FeatureIntroStep extends StatefulWidget {
@@ -39,6 +41,8 @@ class _FeatureIntroStepState extends State<FeatureIntroStep>
   late Offset _currentIntroStepOffset;
   late Size _currentIntroStepSize;
 
+  bool _finishInit = false;
+
   Timer? _rebuildTimer;
 
   @override
@@ -53,6 +57,11 @@ class _FeatureIntroStepState extends State<FeatureIntroStep>
       final RenderBox renderBox = context.findRenderObject() as RenderBox;
       _currentIntroStepOffset = renderBox.localToGlobal(Offset.zero);
       _currentIntroStepSize = context.size!;
+      _finishInit = true;
+      if (widget.stepKey.initStepAfterStart && widget.controller._isRender.value) {
+        widget.controller._isOverlayRebuild.value =
+            !widget.controller._isOverlayRebuild.value;
+      }
     });
     widget.controller._steps.add(this);
   }

@@ -12,11 +12,8 @@ class _FeatureIntroOverlayWidget extends StatefulWidget {
 
 class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
     with WidgetsBindingObserver, TickerProviderStateMixin {
-  final ValueNotifier<bool> _isOverlayRebuild = ValueNotifier(false);
 
   bool _isChangeMetrics = false;
-
-  int _currentStepIndex = 0;
 
   Timer? _rebuildTimer;
 
@@ -38,7 +35,7 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
       }
       _isChangeMetrics = true;
       _rebuildTimer = Timer(const Duration(milliseconds: 1), () {
-        _isOverlayRebuild.value = !_isOverlayRebuild.value;
+        widget.controller._isOverlayRebuild.value = !widget.controller._isOverlayRebuild.value;
       });
     }
   }
@@ -66,17 +63,20 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
                 type: MaterialType.transparency,
                 child: SafeArea(
                   child: ValueListenableBuilder(
-                      valueListenable: _isOverlayRebuild,
+                      valueListenable: widget.controller._isOverlayRebuild,
                       builder: (context, value, child) {
                         final _FeatureIntroStepState step =
-                            widget.controller._renderSteps[_currentStepIndex];
+                            widget.controller._steps.singleWhere((element) =>
+                                element.widget.stepKey ==
+                                widget.controller._renderStepKeys[
+                                    widget.controller._currentStepIndex.value]);
                         return Stack(
                           children: [
                             if (step.widget.nextStepWhenClickedOutbound) ...[
                               _outBoundNextWidget(),
                             ],
-                            _highlightWidget(),
-                            _contentWidget(),
+                            _highlightWidget(step._finishInit),
+                            _contentWidget(step._finishInit),
                           ],
                         );
                       }),
@@ -87,9 +87,12 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
     );
   }
 
-  Widget _highlightWidget() {
-    final _FeatureIntroStepState step =
-        widget.controller._renderSteps[_currentStepIndex];
+  Widget _highlightWidget(bool refresh) {
+    final _FeatureIntroStepState step = widget.controller._steps.singleWhere(
+        (element) =>
+            element.widget.stepKey ==
+            widget.controller
+                ._renderStepKeys[refresh ? widget.controller._currentStepIndex.value : widget.controller._currentStepIndex.value - 1]);
 
     return StatefulBuilder(builder: (context, setState) {
       return ColorFiltered(
@@ -112,8 +115,13 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
                   (step.widget.highlightInnerPadding * 2),
               child: IgnorePointer(
                 ignoring: true,
-                child: widget
-                    .controller._renderSteps[_currentStepIndex].widget.child,
+                child: widget.controller._steps
+                    .singleWhere((element) =>
+                        element.widget.stepKey ==
+                        widget.controller._renderStepKeys[
+                            widget.controller._currentStepIndex.value])
+                    .widget
+                    .child,
               ),
             ),
           ],
@@ -122,13 +130,16 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
     });
   }
 
-  Widget _contentWidget() {
+  Widget _contentWidget(bool refresh) {
     final Size screenSize = MediaQuery.of(context).size;
 
     final ValueNotifier<bool> isVisible = ValueNotifier(false);
 
-    final _FeatureIntroStepState step =
-        widget.controller._renderSteps[_currentStepIndex];
+    final _FeatureIntroStepState step = widget.controller._steps.singleWhere(
+        (element) =>
+            element.widget.stepKey ==
+            widget.controller
+                ._renderStepKeys[refresh ? widget.controller._currentStepIndex.value : widget.controller._currentStepIndex.value - 1]);
 
     return StatefulBuilder(
       builder: (context, setState) {
@@ -152,8 +163,13 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
                       Positioned(
                           top: contentDy,
                           left: contentDx,
-                          child: widget.controller
-                              ._renderSteps[_currentStepIndex].widget.content),
+                          child: widget.controller._steps
+                              .singleWhere((element) =>
+                                  element.widget.stepKey ==
+                                  widget.controller._renderStepKeys[
+                                      widget.controller._currentStepIndex.value])
+                              .widget
+                              .content),
                     ],
                   )
                 : Opacity(opacity: 0, child: step.widget.content));
@@ -175,20 +191,33 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
   }
 
   void _controllerNextStepIndexListener() {
-    if (_currentStepIndex != widget.controller._renderSteps.length - 1) {
-      _currentStepIndex += 1;
+    if (widget.controller._currentStepIndex.value !=
+        widget.controller._renderStepKeys.length - 1) {
+      if (widget.controller._beforeStepInExecute != null) {
+        widget.controller._beforeStepInExecute!();
+      }
+      widget.controller._currentStepIndex.value += 1;
       _isChangeMetrics = false;
-      _isOverlayRebuild.value = !_isOverlayRebuild.value;
+      widget.controller._isOverlayRebuild.value = !widget.controller._isOverlayRebuild.value;
+      if (widget.controller._afterStepInExecute != null) {
+        widget.controller._afterStepInExecute!();
+      }
     } else {
       widget.controller._isRender.value = false;
     }
   }
 
   void _controllerPreviousStepIndexListener() {
-    if (_currentStepIndex != 0) {
-      _currentStepIndex -= 1;
+    if (widget.controller._currentStepIndex.value != 0) {
+      if (widget.controller._beforeStepInExecute != null) {
+        widget.controller._beforeStepInExecute!();
+      }
+      widget.controller._currentStepIndex.value -= 1;
       _isChangeMetrics = false;
-      _isOverlayRebuild.value = !_isOverlayRebuild.value;
+      widget.controller._isOverlayRebuild.value = !widget.controller._isOverlayRebuild.value;
+      if (widget.controller._afterStepInExecute != null) {
+        widget.controller._afterStepInExecute!();
+      }
     } else {
       widget.controller._isRender.value = false;
     }
@@ -196,16 +225,25 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
 
   void _controllerIsRenderListener() {
     if (!widget.controller._isRender.value) {
+      if (widget.controller._beforeStepInExecute != null) {
+        widget.controller._beforeStepInExecute!();
+      }
       _isChangeMetrics = true;
-      _currentStepIndex = 0;
+      widget.controller._currentStepIndex.value = 0;
+      if (widget.controller._afterStepInExecute != null) {
+        widget.controller._afterStepInExecute!();
+      }
     }
   }
 
   double _calculateContentDx(Size contentSize, Size screenSize) {
     double contentDx = 0;
 
-    _FeatureIntroStepState step =
-        widget.controller._renderSteps[_currentStepIndex];
+    _FeatureIntroStepState step = widget.controller._steps.singleWhere(
+        (element) =>
+            element.widget.stepKey ==
+            widget.controller
+                ._renderStepKeys[widget.controller._currentStepIndex.value]);
 
     double calculateLeft() {
       return contentDx = step._currentIntroStepOffset.dx -
@@ -257,8 +295,11 @@ class _FeatureIntroOverlayWidgetState extends State<_FeatureIntroOverlayWidget>
   double _calculateContentDy(Size contentSize, Size screenSize) {
     double contentDy = 0;
 
-    _FeatureIntroStepState step =
-        widget.controller._renderSteps[_currentStepIndex];
+    _FeatureIntroStepState step = widget.controller._steps.singleWhere(
+        (element) =>
+            element.widget.stepKey ==
+            widget.controller
+                ._renderStepKeys[widget.controller._currentStepIndex.value]);
 
     double calculateBottom() {
       return contentDy = step._currentIntroStepOffset.dy +
